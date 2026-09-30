@@ -1,0 +1,21 @@
+// To create a tutorial image, go to getdp/tutorials, then run e.g.
+//
+//   gmsh 01-Electrostatics/microstrip.pro ../doc/texinfo/images/images.opt
+//
+// on macOS. Run the calculation, adjust the options, etc., then
+//
+//   press Shift + Command + 4
+//   press the Space bar  (a little camera icon will appear)
+//
+// Copy the (high resolution) "~/Desktop/Screenshot*.png" file to
+//
+//   ../doc/texinfo/images/highres/01-Electrostatics.png
+//
+// then rescale it with
+//
+//  convert highres/01-Electrostatics.png -resize 50% 01-Electrostatics.png
+
+General.GraphicsHeight = 668;
+General.GraphicsWidth = 1167;
+General.MenuWidth = 363;
+General.MessageHeight = 500;

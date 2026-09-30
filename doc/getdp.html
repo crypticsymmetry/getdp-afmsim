@@ -1,0 +1,365 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+
+<head>
+
+<title>GetDP: a General Environment for the Treatment of Discrete
+Problems</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="keywords" content="free, finite element, solver, finite elements,
+integral equations, boundary elements, partial differential equations,
+numerical methods, electromagnetism, electromagnetics, thermal,
+thermics, mechanical, mechanics, acoustics, couplings, Gmsh, solveur,
+elements finis, programme gratuit">
+<meta name="viewport" content="width=device-width">
+<meta name="apple-itunes-app" content="app-id=845930897">
+<link href="getdp.css" rel="stylesheet" type="text/css">
+
+<style type="text/css"><!--
+  div.small { font-size:80%; }
+  pre { border: 0; }
+  #banner img { box-shadow: none; margin-bottom: 0.5ex; }
+  @media screen and (min-width: 1200px) {
+    #banner { width: 361px; }
+    #banner img { width: 180px; }
+  }
+--></style>
+
+</head>
+
+<body>
+
+<h1 class="short">GetDP</h1>
+
+<div id="banner"><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Inductor"><img src="gallery/inductor_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Magnetometer"><img src="gallery/magnetometer_screenshot1.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Electric-machines"><img src="gallery/machines_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Magnetodynamics-with-cohomology-conditions"><img src="gallery/indheat_screenshot1.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Waveguides"><img src="gallery/waveguides_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Electromechanical-relay"><img src="gallery/relay_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Bloch-modes-in-periodic-waveguides"><img src="gallery/bloch_periodic_waveguides_screenshot1.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Acoustic-scattering"><img src="gallery/acoustic_scattering_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Magnets"><img src="gallery/magnets_screenshot1.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Domain-decomposition-methods-for-waves"><img src="gallery/ddm_waves_screenshot1.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Antennas"><img src="gallery/antennas_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Thermal-conduction"><img src="gallery/thermal_conduction_screenshot2.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Superconductors"><img src="gallery/superconductors_screenshot1.png" alt=""></a><!--
+--><a href="https://gitlab.onelab.info/doc/models/wikis/Time-reversal"><img src="gallery/time_reversal_screenshot2.png" alt=""></a><!--
+-->
+</div>
+
+<h1>A General Environment for the Treatment of Discrete Problems</h1>
+
+<h4>Patrick Dular and Christophe Geuzaine</h4>
+
+<div id="toc">
+  <a href="#Download">Download</a>
+  | <a href="#Documentation">Documentation</a>
+  | <a href="#Licensing">Licensing</a>
+  | <a href="#Links">Links</a>
+</div>
+
+<p>
+GetDP is an open source finite element solver that uses conforming finite
+elements (nodal, edge, face and volume) to discretize
+<a href="http://en.wikipedia.org/wiki/De_Rham_cohomology">de Rham complexes</a>
+in one, two and three dimensions. Although originally designed for
+electromagnetic problems, it has grown into a general-purpose solver capable of
+handling a wide range of multiphysics problems, optionally coupled with lumped
+circuit elements. It supports 1D, 2D, 2D axisymmetric and 3D formulations, in
+steady-state, transient and time-harmonic regimes. Its defining feature is the
+close correspondence between the user-written ASCII description of a discrete
+problem and its symbolic mathematical formulation.
+</p>
+
+<p>
+For example, to solve the Poisson equation <code>div(a grad(v)) = -f</code> on a
+domain <code>D</code>, an input file ("<code>.pro</code>" file) will look as
+follows:
+</p>
+<pre>
+  FunctionSpace {
+    { Name H1; Type Form0;
+      BasisFunction {
+        { Name sn; NameOfCoef vn; Function BF_Node; Support D; Entity NodesOf[All]; }
+      }
+    }
+  }
+  Formulation{
+    { Name Poisson; Type FemEquation;
+      Quantity {
+        { Name v; Type Local; NameOfSpace H1; }
+      }
+      Equation {
+        Integral { [ -a[] * Dof{d v}, {d v} ] ; In D; Jacobian V; Integration I; }
+        Integral { [ f[], {v} ] ; In D; Jacobian V; Integration I; }
+      }
+    }
+  }
+</pre>
+<p>
+i.e., a direct transcription of the discrete function space and
+<a href="http://en.wikipedia.org/wiki/Weak_formulation">weak
+  formulation</a> of the problem.
+</p>
+<p>
+See GetDP's reference manual for a more
+thorough <a href="dev/doc/texinfo/getdp.html#Overview-of-GetDP">overview of
+GetDP's capabilities</a> and for a
+<a href="dev/doc/texinfo/getdp.html#GetDP-tutorial">step-by-step tutorial</a>.
+</p>
+
+<h2><a name="Download"></a>Download</h2>
+
+<p>
+GetDP is distributed under the terms of the <a href="LICENSE.txt">GNU General
+Public License (GPL)</a>:
+</p>
+<ul>
+  <li>
+    <div class="highlight">
+      Current stable release (version 3.5.0, 13 May 2022):
+      <ul>
+        <li>Download GetDP for
+          <a href="bin/Windows/getdp-3.5.0-Windows64c.zip">Windows</a>,
+          <a href="bin/Linux/getdp-3.5.0-Linux64c.tgz">Linux</a> or
+          <a href="bin/macOS/getdp-3.5.0-MacOSXc.tgz">macOS (x86)</a> <a href="#1"><sup>*</sup></a>
+        <li>Download the <a href="src/getdp-3.5.0-source.tgz">source code</a>
+      </ul>
+    </div>
+  <li>Development version:
+    <ul>
+      <li>Download the latest automatic GetDP snapshot for
+        <a href="bin/Windows/getdp-git-Windows64c.zip">Windows</a>,
+        <a href="bin/Linux/getdp-git-Linux64c.tgz">Linux</a>,
+        <a href="bin/macOS/getdp-git-MacOSXc.tgz">macOS (x86)</a> or
+        <a href="bin/macOS/getdp-git-MacOSARMc.tgz">macOS (ARM)</a> <a href="#1"><sup>*</sup></a>
+      <li>Download the latest automatic
+        <a href="src/getdp-git-source.tgz">source code</a> snapshot
+      <li>Access the Git repository: '<code>git clone
+          <a href="https://gitlab.onelab.info/getdp/getdp.git">https://gitlab.onelab.info/getdp/getdp.git</a></code>'
+    </ul>
+    <p>
+    </p>
+  <li>All versions: <a href="bin/">binaries</a> and <a href="src/">sources</a>
+</ul>
+<p>
+If you use GetDP please cite the following reference in your work (books,
+articles, reports, etc.): P. Dular, C. Geuzaine, F. Henrotte and
+W. Legros, <em>A general environment for the treatment of discrete problems and
+its application to the finite element method</em>. IEEE Transactions on
+Magnetics, 34(5), pp. 3395-3398, 1998. <!-- You can also cite additional
+references for <a href="#References">specific features and algorithms</a>. -->
+</p>
+
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+  <p>
+    <input type="hidden" name="cmd" value="_xclick">
+    <input type="hidden" name="business" value="paypal@onelab.info">
+    <input type="hidden" name="item_name" value="GetDP donation">
+    <input type="hidden" name="no_note" value="1">
+    <input type="hidden" name="currency_code" value="EUR">
+    <input type="hidden" name="tax" value="0">
+    To help fund GetDP development, you can make a
+    <input type="submit" value="PayPal" style="display:inline;">
+    donation.
+  </p>
+</form>
+
+<div class="small">
+  <a name="1"><sup>*</sup></a> Binary releases are compiled
+with <a href="http://www.mcs.anl.gov/petsc/">PETSc</a>, with support for the
+sparse direct solver <a href="http://graal.ens-lyon.fr/MUMPS">MUMPS</a>, and
+require Windows &ge; 10, Linux with glibc &ge; 2.24 (stable) or &ge; 2.28
+(development), macOS &ge; 10.15 (x86 - Intel processors) or &ge; 12 (ARM - Apple
+M-series processors). Parallel versions (using MPI) should be
+  <a href="https://gitlab.onelab.info/getdp/getdp/wikis/GetDP-compilation">compiled
+  from source</a>.
+</div>
+
+<h2><a name="Documentation"></a>Documentation</h2>
+
+<ul>
+  <li><a href="doc/texinfo/getdp.html">GetDP reference manual (stable release)</a>
+    (also available in
+    <a href="doc/texinfo/getdp.pdf">pdf</a> and in
+    <a href="doc/texinfo/getdp.txt">plain text</a>)
+  <li><a href="dev/doc/texinfo/getdp.html">GetDP reference manual (development version)</a>
+    (also available in
+    <a href="dev/doc/texinfo/getdp.pdf">pdf</a> and in
+    <a href="dev/doc/texinfo/getdp.txt">plain text</a>)
+  <!-- li><a href="doc/slides_getdp.pdf">Short presentation</a -->
+  <li><a href="https://gitlab.onelab.info/getdp/getdp/-/tree/master/tutorials">Step-by-step
+      tutorial</a> and <a href="https://gitlab.onelab.info/doc/models/wikis/home">various
+    examples</a> highlighting physical models and numerical techniques
+  <li><a href="https://gitlab.onelab.info/getdp/getdp">Gitlab development site</a> with a
+    <a href="https://gitlab.onelab.info/getdp/getdp/wikis/home">wiki</a>,
+    <a href="https://gitlab.onelab.info/getdp/getdp/commits/master">time line</a>
+    of changes and the <a href="https://gitlab.onelab.info/getdp/getdp/issues">bug
+      tracking</a> database
+  <li><a href="https://gitlab.onelab.info/getdp/getdp/blob/master/CHANGELOG.txt">Changelog</a>
+  <!-- li>Mailing lists:
+    <ul>
+      <li><a href="http://onelab.info/mailman/listinfo/getdp/">getdp</a> (archived
+        <a href="http://onelab.info/pipermail/getdp/">here</a>) is the public mailing
+        list for GetDP discussions, and is the best place to ask
+        questions (and get answers!)
+      <li><a href="http://onelab.info/mailman/listinfo/getdp-announce/">getdp-announce</a>
+        (archived <a href="http://onelab.info/pipermail/getdp-announce/">here</a>) is a
+        moderated ("read-only") list for announcements about new
+        releases and other GetDP news
+    </ul -->
+</ul>
+
+<p>
+Please report all issues
+on <a href="https://gitlab.onelab.info/getdp/getdp/issues"
+><code>https://gitlab.onelab.info/getdp/getdp/issues</code></a>.
+</p>
+
+<h2><a name="Licensing"></a>Licensing</h2>
+
+<p>
+GetDP is copyright (C) 1997-2026 by P. Dular
+and <a href="http://www.montefiore.ulg.ac.be/~geuzaine">C. Geuzaine</a>,
+<a href="http://www.ulg.ac.be">University of Li&egrave;ge</a> (see the
+<a href="CREDITS.txt">CREDITS</a> file for more information), and is distributed
+under the terms of the <a href="LICENSE.txt">GNU General Public License
+(GPL)</a> (version 2 or later).
+</p>
+
+<p>
+In short, this means that everyone is free to use GetDP and to redistribute it
+on a free basis. GetDP is not in the public domain; it is copyrighted and there
+are restrictions on its distribution (see the license and the
+related <a href="http://www.gnu.org/copyleft/gpl-faq.html">FAQ</a>).  For
+example, you cannot integrate this version of GetDP (in full or in parts) in
+any <em>closed-source</em> software you plan to distribute (commercially or
+not). If you want to integrate parts of GetDP into closed-source software, or
+want to sell a modified closed-source version of GetDP, you will need to obtain
+a different license. Please <a href="http://geuz.org">contact us directly</a>
+for more information.
+</p>
+
+<h2><a name="Links"></a>Links</h2>
+
+<ul>
+  <li>GetDP uses either <a href="http://www.mcs.anl.gov/petsc/">PETSc</a> or
+    <a href="http://www-users.cs.umn.edu/%7Esaad/software/SPARSKIT/">SPARSKIT</a>
+    to solve linear systems, and
+    <a href="http://www.caam.rice.edu/software/ARPACK">ARPACK</a> or
+    <a href="https://slepc.upv.es/">SLEPc</a> to solve eigenvalue
+    problems.
+  <li><a href="http://gmsh.info">Gmsh</a> can be used as a graphical front-end for GetDP,
+    through the <a href="http://onelab.info">ONELAB</a> interface.
+  <li>GetDP and Gmsh are bundled in the ONELAB mobile app for
+    <a href="https://play.google.com/store/apps/details?id=org.geuz.onelab">Android</a> and
+    <a href="https://itunes.apple.com/us/app/onelab/id845930897">iOS</a>.
+</ul>
+
+<!-- h2><a name="References"></a>References</h2>
+
+<div class="small">
+  GetDP
+  <ul class="small">
+    <li>P. Dular, C. Geuzaine, F. Henrotte and W. Legros, <em>A general
+        environment for the treatment of discrete problems and its application
+        to the finite element method</em>. IEEE Transactions on Magnetics,
+      34(5), pp. 3395-3398, 1998.
+    <li>P. Dular, C. Geuzaine, A. Genon and W. Legros. <em>An evolutive software
+        environment for teaching the finite element method in electromagnetism. IEEE
+        Transactions on Magnetics, 35(3), 1682-1685, 1999.
+    <li>C. Geuzaine, <em>GetDP: a general finite‐element solver for the de Rham
+        complex</em>. In PAMM: Proceedings in Applied Mathematics and Mechanics,
+      Vol. 7, No. 1, pp. 1010603-1010604. Wiley, 2007.
+  </ul>
+  Gmsh and cohomology solver
+  <ul class="small">
+    <li>C. Geuzaine and J.-F. Remacle. <em>Gmsh: a three-dimensional finite
+      element mesh generator with built-in pre- and post-processing
+      facilities</em>. International Journal for Numerical Methods in
+      Engineering 79(11), pp. 1309-1331, 2009.
+    <li>M. Pellikka, S. Suuriniemi, L. Kettunen and C. Geuzaine. <em>Homology
+      and cohomology computation in finite element modeling</em>. SIAM Journal
+      on Scientific Computing 35(5), pp. 1195-1214, 2013.
+  </ul>
+  Global quantities and circuit coupling
+  <ul class="small">
+    <li>C. Geuzaine. High order hybrid finite element schemes for Maxwell's
+      equations taking thin structures and global quantities into
+      account. Universite de Liege (Belgium), 2001.
+    <li>P. Dular, W. Legros and A. Nicolet. Coupling of local and global
+      quantities in various finite element formulations and its application to
+      electrostatics, magnetostatics and magnetodynamics. IEEE Transactions on
+      Magnetics, 34(5), 3078-3081, 2002.
+    <li>P. Dular, F. Henrotte and W. Legros. A general and natural method to
+      define circuit relations associated with magnetic vector potential
+      formulations. IEEE transactions on magnetics, 35(3), 1630-1633. 2002.
+    <li>P. Dular, C. Geuzaine and W. Legros. A natural method for coupling
+      magnetodynamic h-formulations and circuit equations. IEEE transactions on
+      magnetics, 35(3), 1626-1629. 2002.
+    <li>P. Dular, P. Kuo-Peng, C. Geuzaine, N. Sadowski and
+      J. P. A. Bastos. Dual magnetodynamic formulations and their source fields
+      associated with massive and stranded inductors. IEEE Transactions on
+      Magnetics, 36(4), 1293-1299, 2002.
+  </ul>
+  Thin layers and surface impedances
+  <ul class="small">
+    <li>C. Geuzaine, P. Dular and W. Legros. Dual formulations for the modeling
+      of thin electromagnetic shells using edge elements. IEEE transactions on
+      Magnetics, 36(4), 799-803, 2002.
+    <li>P. Dular and C. Geuzaine. Modeling of thin insulating layers with dual
+      3-D magnetodynamic formulations. IEEE Transactions on magnetics, 39(3),
+      1139-1142, 2003.
+    <li>R. V. Sabariego, P. Dular, C. Geuzaine and
+      J. Gyselinck. Surface-impedance boundary conditions in dual time-domain
+      finite-element formulations. IEEE transactions on magnetics, 46(8),
+      3524-3531, 2010.
+    <li>E. Schnaubelt, S. Atalay, M. Wozniak, J. Dular, C. Geuzaine,
+      B. Vanderheyden and S. Schöps. Magneto-thermal thin shell approximation
+      for 3D finite element analysis of no-insulation coils. IEEE Transactions
+      on Applied Superconductivity, 34(3), 1-6, 2023.
+  </ul>
+  Multi-harmonic
+  <ul class="small">
+    <li>J. Gyselinck, P. Dular, C. Geuzaine and W. Legros. Harmonic-balance
+    finite-element modeling of electromagnetic devices: a novel approach. IEEE
+    Transactions on Magnetics, 38(2), 521-524, 2002.
+  </ul>
+  Superconductors
+  <ul class="small">
+    <li>J. Dular, C. Geuzaine and B. Vanderheyden. Finite-element formulations
+      for systems with high-temperature superconductors. IEEE Transactions on
+      Applied Superconductivity, 30(3), 1-13, 2019.
+  </ul>
+  Movement
+  <ul class="small">
+    <li>P. Dular, C. Geuzaine, M. V. Ferreira da Luz, N. Sadowski and
+      J. P. A. Bastos. Connection boundary conditions with different types of
+      finite elements applied to periodicity conditions and to the moving
+      band. COMPEL-The international journal for computation and mathematics in
+      electrical and electronic engineering, 20(1), 109-119, 2001.
+    <li>M. F. Da Luz, P. Dular, N. Sadowski, C. Geuzaine and
+      J. P. A. Bastos. Analysis of a permanent magnet generator with dual
+      formulations using periodicity conditions and moving band. IEEE
+      Transactions on Magnetics, 38(2), 961-964, 2002.
+  </ul>
+  Homogenization
+  <ul class="small">
+    <li>R. V. Sabariego, P. Dular and J. Gyselinck. Time-domain homogenization
+      of windings in 3-D finite element models. IEEE transactions on magnetics,
+      44(6), 1302-1305, 2008.
+    </ul>
+  Hysteresis
+  <ul class="small">
+    <li>K. Jacques, R. V. Sabariego, C. Geuzaine and J. Gyselinck. Inclusion of
+      a direct and inverse energy-consistent hysteresis model in dual
+      magnetostatic finite-element formulations. IEEE Transactions on Magnetics,
+      52(3), 1-4, 2015.
+  </ul>
+</div -->
+
+</body>
+</html>
