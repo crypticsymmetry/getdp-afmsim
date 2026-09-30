@@ -30,6 +30,13 @@
 extern struct Problem Problem_S;
 extern struct CurrentData Current;
 
+// Axial Flux sim patch (TermCache.cpp): terms constant within a Newton
+// loop replay their element matrices.
+bool GetDP_TermCache_Get(struct EquationTerm *term, int element, int nEqu,
+                         int nDof, int nHar, double *Ek);
+void GetDP_TermCache_Put(struct EquationTerm *term, int element, int nEqu,
+                         int nDof, int nHar, const double *Ek);
+
 std::map<int, bool> assDiag_done;
 
 /* ------------------------------------------------------------------------ */
@@ -632,6 +639,22 @@ void Cal_GalerkinTermOfFemEquation(struct Element *Element,
     }
   }
 
+  // Axial Flux sim patch: a term the deck marks constant within this
+  // IterativeLoop replays its element matrix (TermCache.cpp).
+  const bool termCache = FI->Type_DefineQuantityDof != INTEGRALQUANTITY &&
+                         Current.TypeAssembly != ASSEMBLY_SPARSITY_PATTERN;
+  if(termCache && GetDP_TermCache_Get(EquationTerm_P, Element->Num, Nbr_Equ,
+                                      Nbr_Dof, Current.NbrHar, &Ek[0][0][0])) {
+    for(i = 0; i < Nbr_Equ; i++)
+      for(j = 0; j < Nbr_Dof; j++)
+        ((void (*)(struct Dof *, struct Dof *,
+                   double *))FI->Function_AssembleTerm)(
+          QuantityStorageEqu_P->BasisFunction[i].Dof,
+          QuantityStorageDof_P->BasisFunction[j].Dof, Ek[i][j]);
+    Current.flagAssDiag = 0;
+    return;
+  }
+
   /*  -------------------------------------------------------------------  */
   /*  G e t   I n t e g r a t i o n   M e t h o d                          */
   /*  -------------------------------------------------------------------  */
@@ -951,6 +974,10 @@ void Cal_GalerkinTermOfFemEquation(struct Element *Element,
       for(i = 1; i < Nbr_Equ; i++)
         for(j = 0; j < i; j++)
           for(k = 0; k < Current.NbrHar; k++) Ek[j][i][k] = Ek[i][j][k];
+
+    if(termCache && !Current.flagAssDiag)
+      GetDP_TermCache_Put(EquationTerm_P, Element->Num, Nbr_Equ, Nbr_Dof,
+                          Current.NbrHar, &Ek[0][0][0]);
 
     if(Message::GetVerbosity() == 10) {
       printf("Galerkin = ");

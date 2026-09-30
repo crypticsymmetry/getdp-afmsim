@@ -33,6 +33,12 @@ extern struct CurrentData Current;
 
 #if defined(HAVE_PETSC)
 
+#if defined(PETSC_HAVE_HYPRE)
+// B2 (tools/getdp_real_build/patches): hypre AMS needs the discrete
+// gradient, which only the DOF and edge data can provide.
+void GetDP_AMS_Attach(PC pc, Mat A);
+#endif
+
 // Options for PETSc can be provided on the command line, or in the file
 // ~/.petscrc.
 //
@@ -1505,6 +1511,13 @@ static void _solve(gMatrix *A, gVector *B, gSolver *Solver, gVector *X,
   const char *stype = "";
 #endif
 
+#if defined(PETSC_HAVE_HYPRE)
+  if(pctype && !strcmp(pctype, PCHYPRE)) {
+    const char *htype = NULL;
+    _try(PCHYPREGetType(pc, &htype));
+    if(htype && !strcmp(htype, "ams")) GetDP_AMS_Attach(pc, A->M);
+  }
+#endif
   Message::Info("N: %ld - %s %s %s", long(i), ksptype, pctype, stype);
 
   _try(KSPSolve(Solver->ksp[kspIndex], B->V, X->V));

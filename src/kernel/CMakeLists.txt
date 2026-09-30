@@ -16,6 +16,8 @@ set(SRC
       GeoTree.cpp
     DofData.cpp
       LinAlg.cpp LinAlg_PETSC.cpp LinAlg_SPARSKIT.cpp
+      TermCache.cpp
+      AMS_Gradient.cpp
     SolvingAnalyse.cpp SolvingOperations.cpp
       Cal_SolutionErrorRatio.cpp
       Operation_TimeLoopAdaptive.cpp

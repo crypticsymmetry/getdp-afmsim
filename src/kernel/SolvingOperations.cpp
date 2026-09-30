@@ -40,6 +40,11 @@
 extern struct Problem Problem_S;
 extern struct CurrentData Current;
 
+// Axial Flux sim patch (TermCache.cpp): the cache lives for one
+// IterativeLoop.
+void GetDP_TermCache_Begin();
+void GetDP_TermCache_End();
+
 extern int TreatmentStatus;
 
 extern int Flag_POS;
@@ -2963,6 +2968,7 @@ void Treatment_Operation(struct Resolution *Resolution_P, List_T *Operation_L,
       Message::Info("IterativeLoop ...");
 
       Save_Iteration = Current.Iteration;
+      GetDP_TermCache_Begin();
 
       for(Num_Iteration = 1;
           Num_Iteration <= Operation_P->Case.IterativeLoop.NbrMaxIteration;
@@ -3039,6 +3045,7 @@ void Treatment_Operation(struct Resolution *Resolution_P, List_T *Operation_L,
                       Current.RelativeDifference);
       }
       Current.Iteration = Save_Iteration;
+      GetDP_TermCache_End();
       break;
 
     case OPERATION_ITERATIVELINEARSOLVER:

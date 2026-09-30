@@ -1,0 +1,65 @@
+{
+  "written": "2026-09-25T13:55:54-07:00",
+  "host": {
+    "machine": "desktop1",
+    "platform": "Windows-10-10.0.19045-SP0"
+  },
+  "binary": {
+    "file": "getdp.exe",
+    "sha256": "77f6b20ad6075939152798c300560cde4c94542036bab336f6b5d6a1dac5305a",
+    "bytes": 84479983,
+    "built": "2026-09-25T13:51:31-07:00",
+    "version": "4.0.0-git",
+    "info": "Version          : 4.0.0-git\nLicense          : GNU General Public License\nBuild OS         : Windows64\nBuild date       : 20260925\nBuild host       : desktop1\nBuild options    : 64Bit Blas[openblas] Gmsh Kernel Lapack[openblas] NoSocklenT PETSc\nPETSc version    : 3.25.5 (real arithmetic)\nGmsh lib version : 4.15.2-git-git (20260924)\nGmsh lib options : 64Bit ANN[contrib] Eigen[contrib] NoSocklenT Parser Post tinyobjloader\nPackaged by      : ccbb1\nWeb site         : http://getdp.info\nIssue tracker    : https://gitlab.onelab.info/getdp/getdp/issues"
+  },
+  "getdp_source": {
+    "path": "E:\\petsc-real\\getdp-src-clean",
+    "pristine": {
+      "sha256": "5620700af9d4c2c8012d68dfc56330828540d706f66b0d7efe5ee1078b9a0499",
+      "files": 432,
+      "patched_in_place": [
+        "src/kernel/CMakeLists.txt",
+        "src/kernel/Cal_GalerkinTermOfFemEquation.cpp",
+        "src/kernel/LinAlg_PETSC.cpp",
+        "src/kernel/SolvingOperations.cpp"
+      ]
+    }
+  },
+  "patches": {
+    "AMS_Gradient.cpp": "a40b78144cdda2ae1b75e6d125df3aad94957e864a8a927ab856a08287e3a5b3",
+    "apply_ams_patch.py": "e19f652ad3278054ca74a35ecbe38f7968e94b44c7f9598ac5d383256b1438d5",
+    "TermCache.cpp": "9724f1574262691b10a0ac141b7a79d942778481c8632d17a8b8ad250d813284"
+  },
+  "build_scripts": {
+    "0_gmsh_lib.sh": "02549e2f939b9f457cbc13486b336ab4caa3e2b7c8df07746c97a866bc158b57",
+    "1_petsc_configure.sh": "926010e62d70881830459234c755952e80f5050bd18265da20917976f3a09ff0",
+    "2_petsc_make.sh": "a5157cdf9a334d6965ee45ebaaa2d80f31685e3cf35f83ae7b14db16891e1141",
+    "3_getdp_build.sh": "b8f831947ebffd1c8f90b7482d7cbcafb29bd41853702fda59079a997ab60b47",
+    "4_provenance.py": "36a3ced460dd2ca5030f7ea931e1a319f495b7395d2d3a915d3bb4111a9bb1bd",
+    "to_msh22.py": "b6239005e6ee465f161d0f2bc125b87778c6adcfca09a159f1e4ef2df5ee439f"
+  },
+  "dependencies": {
+    "petsc": {
+      "version": "3.25.5",
+      "arch": "arch-mingw-real-omp-hypre",
+      "dir": "E:\\petsc-real\\petsc-3.25.5",
+      "configure_options": "--configModules=PETSc.Configure --optionsModule=config.compilerOptions --with-scalar-type=real --with-precision=double --with-mpi=0 --with-debugging=0 --with-shared-libraries=0 --with-cc=gcc --with-cxx=g++ --with-fc=gfortran --with-openblas=1 --with-openblas-dir=/mingw64 --download-mumps --download-metis --with-openmp --download-hypre --with-x=0 --with-windows-graphics=0 --with-ssl=0 COPTFLAGS=-O3 CXXOPTFLAGS=-O3 FOPTFLAGS=-O3"
+    },
+    "hypre": "3.1.0",
+    "mumps": "5.8.2",
+    "metis": "5.1.0",
+    "gmsh_library": "4.15.2"
+  },
+  "toolchain": {
+    "gcc": "gcc.exe (Rev8, Built by MSYS2 project) 15.2.0",
+    "msys2_packages": {
+      "mingw-w64-x86_64-gcc": "15.2.0-8",
+      "mingw-w64-x86_64-gcc-fortran": "15.2.0-8",
+      "mingw-w64-x86_64-openblas": "0.3.30-2",
+      "mingw-w64-x86_64-cmake": "4.1.1-1",
+      "mingw-w64-x86_64-ninja": "1.13.1-1",
+      "mingw-w64-x86_64-python": "3.12.11-3"
+    }
+  },
+  "license": "GetDP is GPL-2.0-or-later; this binary carries the patches in tools/getdp_real_build/patches (Docs/THIRD_PARTY_LICENSES.md)."
+}
